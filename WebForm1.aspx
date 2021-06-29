@@ -37,6 +37,20 @@
         <asp:GridView ID="GridView1" runat="server" Width="791px">
         </asp:GridView>
         <br />
+
+        <h2>Insertar nuevo empleado:</h2>
+        <p>id:&nbsp;&nbsp;
+            <asp:TextBox ID="txtId" runat="server" Width="181px"></asp:TextBox>
+        </p>
+        nombre:&nbsp;
+        <asp:TextBox ID="txtNombre" runat="server" Width="146px"></asp:TextBox>
+        <br />
+        <br />
+        <br />
+
+        <asp:Button ID="Button5" runat="server" OnClick="Button5_Click" Text="Insertar datos" Width="790px" />
+        <br />
+        <br />
     </form>
 </body>
 </html>
