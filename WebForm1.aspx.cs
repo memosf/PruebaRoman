@@ -16,7 +16,7 @@ namespace WebAplicacionConexiconSQL
         {
             if (IsPostBack == false)
             {
-                objacc = new ClassAccesoSQL("Data Source = ROMANISIDOR; Initial Catalog = BDTIENDA; Integrated Security = true");
+                objacc = new ClassAccesoSQL(@"Data Source = DESKTOP-0J2HDN7\SQLEXPRESS2017; Initial Catalog = BDTIENDA; Integrated Security = true");
                 Session["objacc"] = objacc;
             }
             else
@@ -147,11 +147,20 @@ namespace WebAplicacionConexiconSQL
         protected void Button5_Click(object sender, EventArgs e)
         {
 
+            // declaración de parámetros
             SqlParameter first = new SqlParameter("id", SqlDbType.Int);
             SqlParameter second = new SqlParameter("nombre", SqlDbType.NVarChar, 50);
 
+            //dando valores a los parámetros
             first.Value = txtId.Text;
-            second.Value = txtNombre.Text;
+            second.Value = txtNombre.Text; 
+
+            //establecer la dirección de los parámetros
+            first.Direction = ParameterDirection.Input;
+            second.Direction = ParameterDirection.Input;
+
+
+            
 
             string sentencia = "Insert Into empleado values(@id, @nombre);";
             SqlConnection conexion = null;
@@ -159,6 +168,31 @@ namespace WebAplicacionConexiconSQL
             Boolean resp = false;
             conexion = objacc.AbrirConexion(ref mensaje);
 
+            resp = objacc.InsertaEmpleadoconPar(sentencia, conexion, ref mensaje,
+                first,second);
+
+            if (resp)
+            {
+
+                this.ClientScript.RegisterStartupScript(this.GetType(),
+                   "msgModificacion", "verAlerta(`Correcto`, `" + mensaje + "`, `success`)", true);
+            }
+            else
+            {
+                this.ClientScript.RegisterStartupScript(this.GetType(),
+                    "msgModificacion", "verAlerta(`Error`, `" + mensaje + "`, `error`)", true);
+            }
+        }
+
+        protected void Button6_Click(object sender, EventArgs e)
+        {
+            string sentencia = "Insert Into empleado values(" + txtId.Text + ",'" 
+                + txtNombre.Text+ "');";
+            SqlConnection conexion = null;
+            string mensaje = "";
+            Boolean resp = false;
+            conexion = objacc.AbrirConexion(ref mensaje);
+            TextBox1.Text = sentencia;
             resp = objacc.ModificaBDinsegura(sentencia, conexion, ref mensaje);
 
             if (resp)
@@ -172,6 +206,64 @@ namespace WebAplicacionConexiconSQL
                 this.ClientScript.RegisterStartupScript(this.GetType(),
                     "msgModificacion", "verAlerta(`Error`, `" + mensaje + "`, `error`)", true);
             }
+
+        }
+
+        protected void Button7_Click(object sender, EventArgs e)
+        {
+            SqlParameter[] misparametros = new SqlParameter[4];
+
+            misparametros[0] = new SqlParameter("Idprod", SqlDbType.Int);
+            misparametros[0].Value = Txtidprod.Text;
+            misparametros[0].Direction = ParameterDirection.Input;
+
+            misparametros[1] = new SqlParameter
+            {
+                ParameterName = "Descri",
+                SqlDbType = SqlDbType.NVarChar,
+                Size = 50,
+                Direction = ParameterDirection.Input,
+                Value = txtdesc.Text
+            };
+
+            misparametros[2] = new SqlParameter
+            {
+                ParameterName = "Cate",
+                SqlDbType = SqlDbType.NVarChar,
+                Size = 15,
+                Direction = ParameterDirection.Input,
+                Value = txtcatego.Text
+            };
+            misparametros[3] = new SqlParameter
+            {
+                ParameterName = "Precio",
+                SqlDbType = SqlDbType.Float,
+                Direction = ParameterDirection.Input,
+                Value = txtprecio.Text
+            };
+
+            string sentencia = "Insert Into Productos values(@Idprod, @Descri, @Cate,@Precio);";
+            SqlConnection conexion = null;
+            string mensaje = "";
+            Boolean resp = false;
+            conexion = objacc.AbrirConexion(ref mensaje);
+
+            resp = objacc.ModificaBDunPocoMasSegura(sentencia, conexion,
+                ref mensaje, misparametros);
+        
+
+            if (resp)
+            {
+
+                this.ClientScript.RegisterStartupScript(this.GetType(),
+                   "msgModificacion", "verAlerta(`Correcto`, `" + mensaje + "`, `success`)", true);
+            }
+            else
+            {
+                this.ClientScript.RegisterStartupScript(this.GetType(),
+                    "msgModificacion", "verAlerta(`Error`, `" + mensaje + "`, `error`)", true);
+            }
+
         }
     }
 }
