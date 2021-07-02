@@ -211,7 +211,7 @@ namespace WebAplicacionConexiconSQL
 
         protected void Button7_Click(object sender, EventArgs e)
         {
-            SqlParameter[] misparametros = new SqlParameter[4];
+            SqlParameter[] misparametros = new SqlParameter[5];
 
             misparametros[0] = new SqlParameter("Idprod", SqlDbType.Int);
             misparametros[0].Value = Txtidprod.Text;
@@ -240,6 +240,14 @@ namespace WebAplicacionConexiconSQL
                 SqlDbType = SqlDbType.Float,
                 Direction = ParameterDirection.Input,
                 Value = txtprecio.Text
+            };
+            
+            misparametros[4] = new SqlParameter
+            {
+                ParameterName = "nada",
+                SqlDbType = SqlDbType.Float,
+                Direction = ParameterDirection.Input,
+                Value = 5.66
             };
 
             string sentencia = "Insert Into Productos values(@Idprod, @Descri, @Cate,@Precio);";
